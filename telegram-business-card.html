@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Визитка</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: var(--tg-theme-bg-color, #1C1B1F);
+    --bg-elevated: var(--tg-theme-secondary-bg-color, #242327);
+    --text: var(--tg-theme-text-color, #F2EFE9);
+    --text-dim: var(--tg-theme-hint-color, #9C9A9F);
+    --accent: var(--tg-theme-button-color, #E8A33D);
+    --accent-text: var(--tg-theme-button-text-color, #1C1B1F);
+    --border: #38373C;
+    --card: #29282D;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{ height:100%; }
+  body{
+    font-family:'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x:hidden;
+  }
+  #app{ min-height:100vh; position:relative; }
+
+  .screen{
+    position:absolute; top:0; left:0; width:100%; min-height:100vh;
+    display:flex; flex-direction:column;
+    padding: 28px 20px 24px;
+    transition: transform .32s cubic-bezier(.4,0,.2,1), opacity .28s ease;
+  }
+  .screen.enter-right{ transform: translateX(100%); opacity:0; }
+  .screen.active{ transform: translateX(0); opacity:1; }
+  .screen.exit-left{ transform: translateX(-30%); opacity:0; pointer-events:none; }
+  .screen.hidden-screen{ display:none; }
+
+  /* HOME */
+  .avatar-wrap{
+    width:100%; display:flex; justify-content:center; margin: 12px 0 22px;
+  }
+  .avatar{
+    width:132px; height:132px; border-radius:32px;
+    background: linear-gradient(135deg, var(--accent), #D97757);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Manrope'; font-weight:800; font-size:44px; color: var(--accent-text);
+    box-shadow: 0 12px 30px rgba(232,163,61,0.25);
+    overflow:hidden;
+  }
+  .avatar img{ width:100%; height:100%; object-fit:cover; }
+
+  .intro-text{
+    text-align:center; font-size:14.5px; line-height:1.6; color: var(--text-dim);
+    max-width: 320px; margin: 0 auto 30px;
+  }
+
+  .btn-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: auto;
+  }
+  .nav-btn{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 14px;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    text-align:center;
+    cursor:pointer;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .nav-btn:active{ transform: scale(0.96); background: var(--bg-elevated); }
+  .nav-btn .icon{
+    width:40px; height:40px; border-radius:12px;
+    background: rgba(232,163,61,0.14);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .nav-btn .icon svg{ width:20px; height:20px; stroke: var(--accent); }
+  .nav-btn .label{
+    font-family:'Manrope'; font-weight:700; font-size:13.5px; line-height:1.3;
+  }
+
+  .footer{
+    text-align:center; padding-top: 26px; font-size:12.5px; color: var(--text-dim);
+  }
+  .footer b{ color: var(--text); font-weight:600; }
+
+  /* SUB PAGES */
+  .back-btn{
+    display:flex; align-items:center; gap:6px;
+    color: var(--accent); font-weight:600; font-size:14px;
+    margin-bottom: 20px;
+    cursor:pointer; width:fit-content;
+  }
+  .page-title{
+    font-family:'Manrope'; font-weight:800; font-size:22px; margin-bottom:14px; letter-spacing:-0.01em;
+  }
+  .page-body{
+    font-size:14.5px; line-height:1.65; color: var(--text-dim);
+  }
+  .page-body p{ margin-bottom:14px; }
+  .page-body .card{
+    background: var(--card); border:1px solid var(--border); border-radius:16px;
+    padding:16px; margin-bottom:12px;
+  }
+  .page-body .card b{ color: var(--text); display:block; margin-bottom:4px; font-size:14px; }
+
+  .cta{
+    margin-top: 20px;
+    background: var(--accent); color: var(--accent-text);
+    text-align:center; font-weight:700; font-size:14.5px;
+    padding: 14px; border-radius: 14px;
+    cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatar-slot">К</div>
+    </div>
+    <div class="intro-text">
+      Это приложение создано, чтобы показать возможности Telegram Mini App,
+      а также познакомить вас с моими услугами.
+    </div>
+
+    <div class="btn-grid">
+      <div class="nav-btn" data-target="about">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0114 0v1"/></svg></div>
+        <div class="label">Обо мне</div>
+      </div>
+      <div class="nav-btn" data-target="channel">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H7l-3 3V4z"/></svg></div>
+        <div class="label">Материалы по подписке</div>
+      </div>
+      <div class="nav-btn" data-target="cooperation">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20h5v-1a4 4 0 00-3-3.87M9 20H4v-1a4 4 0 013-3.87m5-3.13a4 4 0 100-8 4 4 0 000 8zm6 0a4 4 0 100-8"/></svg></div>
+        <div class="label">Сотрудничество</div>
+      </div>
+      <div class="nav-btn" data-target="consult">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div class="label">Консультация</div>
+      </div>
+    </div>
+
+    <div class="footer">сделано <b>@Wolfifty</b></div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="screen enter-right hidden-screen" id="screen-about">
+    <div class="back-btn" data-back>← Назад</div>
+    <div class="page-title">Обо мне</div>
+    <div class="page-body">
+      <p>Разрабатываю Telegram-ботов и Mini Apps — от простых воронок на Salebot до кастомных решений с нуля на Python и React.</p>
+      <p>Специализация: автоматизация для экспертов и блогеров — контент-планы, квизы с логикой, приём заявок, интеграции с оплатой.</p>
+      <div class="card">
+        <b>Стек</b>
+        Salebot, Python (aiogram), React, PostgreSQL, Claude API
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANNEL -->
+  <div class="screen enter-right hidden-screen" id="screen-channel">
+    <div class="back-btn" data-back>← Назад</div>
+    <div class="page-title">Материалы по подписке</div>
+    <div class="page-body">
+      <p>Разборы, кейсы и механика того, как устроены Telegram-боты и Mini Apps изнутри — публикую в канале.</p>
+      <div class="card">
+        <b>Что внутри</b>
+        Примеры интерфейсов, разбор логики ботов, инсайды по разработке
+      </div>
+      <div class="cta">Перейти в канал</div>
+    </div>
+  </div>
+
+  <!-- COOPERATION -->
+  <div class="screen enter-right hidden-screen" id="screen-cooperation">
+    <div class="back-btn" data-back>← Назад</div>
+    <div class="page-title">Сотрудничество</div>
+    <div class="page-body">
+      <p>Беру проекты по разработке ботов и Mini Apps под ключ — от идеи до запуска.</p>
+      <div class="card">
+        <b>Формат работы</b>
+        Обсуждаем задачу → делаю прототип → дорабатываем → запуск и поддержка
+      </div>
+      <div class="cta">Обсудить проект</div>
+    </div>
+  </div>
+
+  <!-- CONSULT -->
+  <div class="screen enter-right hidden-screen" id="screen-consult">
+    <div class="back-btn" data-back>← Назад</div>
+    <div class="page-title">Консультация</div>
+    <div class="page-body">
+      <p>Если не уверены, что именно нужно — бот, Mini App или доработка существующего — можно обсудить и подобрать решение под задачу.</p>
+      <div class="card">
+        <b>Подойдёт, если</b>
+        Есть идея, но неясен формат реализации или бюджет
+      </div>
+      <div class="cta">Записаться на консультацию</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  try{
+    if(window.Telegram && window.Telegram.WebApp){
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
+  }catch(e){}
+
+  const home = document.getElementById('screen-home');
+  const buttons = document.querySelectorAll('.nav-btn');
+  const backButtons = document.querySelectorAll('[data-back]');
+
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = btn.getAttribute('data-target');
+      const el = document.getElementById('screen-' + target);
+      el.classList.remove('hidden-screen');
+      requestAnimationFrame(()=>{
+        home.classList.remove('active');
+        home.classList.add('exit-left');
+        el.classList.remove('enter-right');
+        el.classList.add('active');
+      });
+    });
+  });
+
+  backButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const current = btn.closest('.screen');
+      current.classList.remove('active');
+      current.classList.add('enter-right');
+      home.classList.remove('exit-left');
+      home.classList.add('active');
+      setTimeout(()=>{ current.classList.add('hidden-screen'); }, 320);
+    });
+  });
+</script>
+
+</body>
+</html>
