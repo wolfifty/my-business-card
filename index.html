@@ -20,6 +20,9 @@
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{ height:100%; }
+  html{
+    background-color: var(--bg);
+  }
   body{
     font-family:'Inter', -apple-system, sans-serif;
     color: var(--text);
@@ -31,7 +34,6 @@
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    background-attachment: fixed;
     min-height: 100vh;
   }
   #app{ min-height:100vh; position:relative; }
